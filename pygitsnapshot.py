@@ -84,12 +84,15 @@ def usage():
     strx = \
     """
     Usage: python pygitsnapshot.py <source dir> <destination dir>
+
     Optional:
-    -b --branch <branch_name> : Specify the branch to create the snapshot on
-    -m --message <commit_message> : Specify the commit message to use
-    -p --push : Boolean flag to push the changes to the remote
-    -h --help : Print this help message
+    -b --branch <branch_name>       : Specify the branch to create the snapshot on
+    -m --message <commit_message>   : Specify the commit message to use
+    -p --push                       : Boolean flag to push the changes to the remote
+    -h --help                       : Print this help message
     """ 
+    print(strx)
+
 def main():
     # print("Usage: pygitsnapshot.py <source dir> <destination dir> Optional: <-b> <branch name>")
     arg_parser = argparse.ArgumentParser(description="Create a snapshot of a directory using git")
@@ -100,17 +103,25 @@ def main():
     arg_parser.add_argument("-b", "--branch", help="The branch to create the snapshot on")
     arg_parser.add_argument("-m", "--message", help="The commit message to use")
     arg_parser.add_argument("-p", "--push", help="Push the changes to the remote", action="store_true")
-    arg_parser.add_argument("-h", "--help", help="Print this help message", action="store_true")
-    args = arg_parser.parse_args()
+
+    try:
+        args : argparse.Namespace = arg_parser.parse_args()
+    except:
+        usage()
+        sys.exit(1)
 
     if args.help:
         usage()
         sys.exit(0)
     
     # if invalid arguments, print usage
-    if args.source_dir is None or args.destination_dir is None:
+    if (args.source_dir is None) or (args.destination_dir is None):
         usage()
         sys.exit(1)
 
     # run the script
     run_snapshot(**vars(args))
+
+
+if __name__ == "__main__":
+    main()
